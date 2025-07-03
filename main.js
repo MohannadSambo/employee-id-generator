@@ -23,9 +23,22 @@ document.getElementById('app').innerHTML = `
   <button id="exportBtn" style="display:none; margin-top:10px;">Export to Excel</button>
 `;
 
+// --- Add Department Mapping Upload UI ---
+const appDiv = document.getElementById('app');
+const deptMapSection = document.createElement('div');
+deptMapSection.innerHTML = `
+  <h2>Upload Department Mapping Excel File</h2>
+  <input type="file" id="deptMapFileInput" accept=".xlsx, .xls" />
+  <button id="deptMapUploadBtn">Upload Department Mapping</button>
+  <div id="deptMapStatus"></div>
+`;
+appDiv.insertBefore(deptMapSection, appDiv.firstChild.nextSibling); // After the main title
+
 // --- Global Variables ---
 let lastJson = null;      // Stores the uploaded data
 let lastColumns = null;   // Stores the current columns
+let departmentShortNameMapArabic = {};
+let departmentShortNameMapEnglish = {};
 
 // --- Load Excel Library ---
 const script = document.createElement('script');
@@ -43,6 +56,127 @@ script.onload = () => {
   document.getElementById('generateIdBtn').onclick = generateEmployeeIDs;
 
   document.getElementById('exportBtn').onclick = exportToExcel;
+
+  // --- Button: Upload Department Mapping ---
+  document.getElementById('deptMapUploadBtn').onclick = function() {
+    const fileInput = document.getElementById('deptMapFileInput');
+    const statusDiv = document.getElementById('deptMapStatus');
+    // Remove any previous mapping table and toggle title
+    const oldTable = document.getElementById('deptMapTable');
+    if (oldTable) oldTable.remove();
+    const oldToggle = document.getElementById('deptMapToggle');
+    if (oldToggle) oldToggle.remove();
+    if (!fileInput.files.length) {
+      statusDiv.textContent = 'Please select a department mapping file.';
+      statusDiv.style.color = '#ff2d42';
+      return;
+    }
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+      departmentShortNameMapArabic = {};
+      departmentShortNameMapEnglish = {};
+      const mappingRows = [];
+      json.forEach(row => {
+        const arabic = row['department in arabic'] || row['Department in Arabic'] || row['arabic'] || row['Arabic'] || '';
+        const english = row['department name in english'] || row['Department name in english'] || row['department in english'] || row['Department in English'] || row['english'] || row['English'] || '';
+        const shortName = row['short name for department'] || row['Short name for department'] || row['short'] || row['Short'] || '';
+        if (arabic && shortName) {
+          departmentShortNameMapArabic[arabic.trim()] = shortName.trim();
+        }
+        if (english && shortName) {
+          departmentShortNameMapEnglish[english.trim().toLowerCase()] = shortName.trim();
+        }
+        if ((arabic || english) && shortName) {
+          mappingRows.push({ arabic: arabic.trim(), english: english.trim(), short: shortName.trim() });
+        }
+      });
+      if (Object.keys(departmentShortNameMapArabic).length === 0 && Object.keys(departmentShortNameMapEnglish).length === 0) {
+        statusDiv.textContent = 'No valid mappings found. Please check your file.';
+        statusDiv.style.color = '#ff2d42';
+      } else {
+        statusDiv.textContent = 'Department mapping uploaded successfully!';
+        statusDiv.style.color = '#4caf50';
+        // Add toggleable title
+        const toggle = document.createElement('div');
+        toggle.id = 'deptMapToggle';
+        toggle.textContent = 'Show Department Mapping Table ▼';
+        toggle.style.cursor = 'pointer';
+        toggle.style.fontWeight = '600';
+        toggle.style.marginTop = '12px';
+        toggle.style.color = '#ff2d42';
+        statusDiv.parentNode.appendChild(toggle);
+        // Create mapping table (hidden by default)
+        const table = document.createElement('table');
+        table.id = 'deptMapTable';
+        table.style.marginTop = '8px';
+        table.style.background = '#232429';
+        table.style.color = '#fff';
+        table.style.borderCollapse = 'collapse';
+        table.style.width = '100%';
+        table.style.display = 'none';
+        table.innerHTML = `
+          <thead><tr>
+            <th style="padding:8px 6px; border-bottom:1px solid #393a3f;">Arabic Name</th>
+            <th style="padding:8px 6px; border-bottom:1px solid #393a3f;">English Name</th>
+            <th style="padding:8px 6px; border-bottom:1px solid #393a3f;">Short Name</th>
+          </tr></thead>
+          <tbody>
+            ${mappingRows.map(row => `
+              <tr>
+                <td style="padding:8px 6px; border-bottom:1px solid #393a3f;">${row.arabic}</td>
+                <td style="padding:8px 6px; border-bottom:1px solid #393a3f;">${row.english}</td>
+                <td style="padding:8px 6px; border-bottom:1px solid #393a3f; color:#ff2d42; font-weight:600;">${row.short}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        `;
+        statusDiv.parentNode.appendChild(table);
+        // Toggle logic
+        let shown = false;
+        toggle.onclick = function() {
+          shown = !shown;
+          table.style.display = shown ? '' : 'none';
+          toggle.textContent = (shown ? 'Hide' : 'Show') + ' Department Mapping Table ' + (shown ? '▲' : '▼');
+        };
+        // --- NEW: If employee data is loaded, re-map and re-render ---
+        if (lastJson && lastColumns) {
+          // Remove Employee ID column if present
+          lastColumns = lastColumns.filter(col => col !== 'Employee ID');
+          // Re-map department
+          lastJson.forEach(row => {
+            const origDept = row['Department'];
+            if (departmentShortNameMapArabic && departmentShortNameMapArabic[origDept]) {
+              row['Department'] = departmentShortNameMapArabic[origDept];
+            } else if (departmentShortNameMapEnglish && departmentShortNameMapEnglish[origDept && origDept.toLowerCase()]) {
+              row['Department'] = departmentShortNameMapEnglish[origDept.toLowerCase()];
+            }
+          });
+          // Re-render table
+          renderTable(lastJson, lastColumns);
+          // If Employee ID column was present, re-generate IDs
+          const patternSelect = document.getElementById('patternSelect');
+          if (patternSelect && document.getElementById('generateIdBtn').style.display !== 'none') {
+            generateEmployeeIDs();
+          }
+        }
+      }
+    };
+    reader.onerror = function() {
+      statusDiv.textContent = 'Error reading department mapping file.';
+      statusDiv.style.color = '#ff2d42';
+      const oldTable = document.getElementById('deptMapTable');
+      if (oldTable) oldTable.remove();
+      const oldToggle = document.getElementById('deptMapToggle');
+      if (oldToggle) oldToggle.remove();
+    };
+    reader.readAsArrayBuffer(file);
+  };
 };
 
 // --- Download a blank Excel template with required columns ---
@@ -109,6 +243,14 @@ function handleFileUpload() {
     json = json.map(row => {
       const filtered = {};
       requiredColumns.forEach(col => filtered[col] = row[col]);
+      // Replace department with short name if mapping exists (Arabic first, then English)
+      if (filtered['Department']) {
+        if (departmentShortNameMapArabic && departmentShortNameMapArabic[filtered['Department']]) {
+          filtered['Department'] = departmentShortNameMapArabic[filtered['Department']];
+        } else if (departmentShortNameMapEnglish && departmentShortNameMapEnglish[filtered['Department'].toLowerCase()]) {
+          filtered['Department'] = departmentShortNameMapEnglish[filtered['Department'].toLowerCase()];
+        }
+      }
       return filtered;
     });
 
@@ -188,8 +330,8 @@ function generateEmployeeIDs() {
   const pattern = patternSelect ? patternSelect.value : 'pattern1';
 
   if (pattern === 'pattern5') {
-    // [Department]-[Year]-[Serial Number]
-    let rowsWithYear = lastJson.map((row, idx) => {
+    // [Department]-[Year]-[Serial Number] (serial per department and year)
+    let rowsWithDeptYear = lastJson.map((row, idx) => {
       let dateVal = row['Joining date'];
       if (typeof dateVal === 'number') dateVal = formatDateString(dateVal);
       let year = '';
@@ -207,20 +349,24 @@ function generateEmployeeIDs() {
           }
         }
       }
+      const dept = row['Department'] || '';
       return {
         idx,
-        dept: row['Department'] || '',
+        dept,
         year,
         dateObj: dateObj || new Date(0),
         row
       };
     });
-    const yearGroups = {};
-    rowsWithYear.forEach(item => {
-      if (!yearGroups[item.year]) yearGroups[item.year] = [];
-      yearGroups[item.year].push(item);
+    // Group by department and year
+    const deptYearGroups = {};
+    rowsWithDeptYear.forEach(item => {
+      const key = `${item.dept}||${item.year}`;
+      if (!deptYearGroups[key]) deptYearGroups[key] = [];
+      deptYearGroups[key].push(item);
     });
-    Object.values(yearGroups).forEach(group => {
+    // For each group, sort by date and assign serial number
+    Object.values(deptYearGroups).forEach(group => {
       group.sort((a, b) => a.dateObj - b.dateObj);
       group.forEach((item, i) => {
         const serial = String(i + 1).padStart(2, '0');
