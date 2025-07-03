@@ -1,0 +1,12 @@
+{
+  "name": "employee-id-generator",
+  "version": "1.0.0",
+  "description": "A web app to generate employee IDs from Excel files.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+} 
