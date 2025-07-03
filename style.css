@@ -139,6 +139,111 @@ label[for="patternSelect"] {
   color: #fff;
 }
 
+/* --- Tab Styles --- */
+.tabBtn {
+  background: #232429;
+  color: #fff;
+  border: none;
+  border-radius: 12px 12px 0 0;
+  padding: 14px 36px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin: 0 2px;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, border 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  outline: none;
+  letter-spacing: 0.5px;
+  border-bottom: 3px solid transparent;
+}
+.tabBtn.tabActive {
+  background: #ff2d42;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(255,45,66,0.12);
+  border-bottom: 3px solid #ff2d42;
+  z-index: 2;
+  position: relative;
+}
+.tabBtn:hover:not(.tabActive) {
+  background: #393a3f;
+  color: #ff2d42;
+  border-bottom: 3px solid #ff2d42;
+  z-index: 1;
+}
+
+/* --- Single Employee Section --- */
+#singleSection {
+  background: #232429;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+  padding: 32px 28px;
+  margin: 0 auto 32px auto;
+  max-width: 480px;
+  transition: box-shadow 0.2s;
+}
+#singleSection h2 {
+  color: #ff2d42;
+  font-size: 1.3rem;
+  margin-bottom: 18px;
+  font-weight: 700;
+}
+#singleSection label {
+  color: #fff;
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: block;
+}
+#singleSection input[type="text"],
+#singleSection input[type="date"],
+#singleSection select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #393a3f;
+  background: #18191c;
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+#singleSection input[type="text"]:focus,
+#singleSection input[type="date"]:focus,
+#singleSection select:focus {
+  border: 1.5px solid #ff2d42;
+  box-shadow: 0 2px 8px rgba(255,45,66,0.10);
+  outline: none;
+}
+#singleSection button[type="submit"] {
+  background: #ff2d42;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(255,45,66,0.10);
+}
+#singleSection button[type="submit"]:hover {
+  background: #e01b2f;
+  box-shadow: 0 4px 16px rgba(255,45,66,0.16);
+}
+#singleResult {
+  margin-top: 22px;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #4caf50;
+  letter-spacing: 0.5px;
+  background: #18191c;
+  border-radius: 8px;
+  padding: 12px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
 /* --- Responsive Design --- */
 @media (max-width: 900px) {
   #app {
@@ -162,6 +267,14 @@ label[for="patternSelect"] {
   }
   label[for="patternSelect"] {
     font-size: 0.95rem;
+  }
+  .tabBtn {
+    font-size: 1rem;
+    padding: 10px 18px;
+  }
+  #singleSection {
+    padding: 20px 8px;
+    max-width: 98vw;
   }
 }
 
@@ -197,6 +310,23 @@ label[for="patternSelect"] {
     font-size: 0.9rem;
     margin-top: 12px;
     margin-bottom: 4px;
+  }
+  .tabBtn {
+    font-size: 0.95rem;
+    padding: 8px 8px;
+  }
+  #singleSection {
+    padding: 10px 2vw;
+    margin: 0 auto 16px auto;
+    border-radius: 10px;
+  }
+  #singleSection h2 {
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+  }
+  #singleResult {
+    font-size: 1rem;
+    padding: 8px 0;
   }
 }
 

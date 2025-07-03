@@ -1,34 +1,41 @@
 # Employee ID Generator
 
-A modern web app for generating employee IDs from Excel files, with a dark UI inspired by professional design kits.
+A modern web app for generating employee IDs from Excel files or for a single employee, with a beautiful, responsive dark UI.
 
-## Description
-This app allows HR or admin users to:
-- Download a pre-formatted Excel template for employee data
-- Upload a filled Excel file (with only the required columns)
-- Preview the uploaded data in a stylish table
-- Generate new Employee IDs for each row using a specific pattern
-- Export the updated data (including the new IDs) back to Excel
+## Features
+- **Bulk (Excel) Mode:** Upload an Excel file with employee data, generate IDs for all, and export the result.
+- **Single Employee Mode:** Enter one employee's info, select a pattern, and generate an ID instantly.
+- **Department Mapping:** Upload a mapping file to convert department names (Arabic/English) to short names.
+- **Pattern Selection:** Choose from multiple ID patterns for both bulk and single modes.
+- **Responsive UI:** Works beautifully on desktop, tablet, and mobile.
 
 ## User Flow
-1. **Download Template**
-   - Click the "Download Excel Template" button to get a blank Excel file with the required columns: Employee name, Old ID number, Joining date, Department.
-2. **Fill the Template**
-   - Open the template in Excel and fill in employee data. Do not add or remove columns.
-3. **Upload File**
-   - Click the "Upload" button and select your filled Excel file. Only the required columns will be accepted; extra columns are ignored.
-   - The app will validate the file and display the data in a table.
-4. **Generate Employee IDs**
-   - Click the "Generate ID" button. The app will add a new column with IDs in the format: `[Department] - [joining date year] - [joining date month] [joining date day]`.
-5. **Export Updated File**
-   - Download the updated Excel file with the new Employee ID column.
 
-## Notes
-- The app enforces the required columns and ignores any extra columns in uploaded files.
-- Dates are automatically formatted for clarity.
-- The UI is fully responsive and uses a modern dark theme.
+### Bulk (Excel) Mode
+1. **Download Template:** Click "Download Excel Template" to get a blank file with required columns.
+2. **Fill Template:** Enter employee data in Excel. Do not add or remove columns.
+3. **Upload File:** Click "Upload" and select your filled Excel file. Only the required columns are accepted.
+4. **(Optional) Upload Department Mapping:** Upload a mapping file to use short names for departments.
+5. **Generate IDs:** Choose a pattern and click "Generate ID". The app adds a new column with generated IDs.
+6. **Export:** Download the updated Excel file with the new Employee ID column.
 
----
+### Single Employee Mode
+1. **Switch to Single Employee tab.**
+2. **Enter Employee Info:** Fill in the form fields.
+3. **Select Department:** Choose from mapped short names (if mapping uploaded) or enter manually.
+4. **Choose Pattern:** Select the desired ID pattern.
+5. **Generate:** Click "Generate ID" to see the result instantly.
+
+### Department Mapping
+- Upload a mapping Excel file with columns for Arabic name, English name, and short name.
+- The app will use the short name for department in all ID generation.
+- You can view/hide the mapping table after upload.
+- Changing the mapping updates all generated IDs and tables automatically.
+
+## Code Structure
+- **main.js:** All UI and logic, organized into clear sections: UI setup, tab logic, department mapping, bulk mode, single mode, utilities.
+- **style.css:** Modern, responsive dark theme with refined controls and layout.
+- **index.html:** Minimal, loads the app and styles.
 
 ## Working with Git, GitHub, and Deployment
 
