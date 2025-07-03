@@ -302,16 +302,16 @@ function showStatus(message, isError = false) {
 function excelDateToJSDate(serial) {
   // Excel's epoch starts at 1899-12-31
   const excelEpoch = new Date(1899, 11, 31);
-  // Excel incorrectly treats 1900 as a leap year, so dates >= 60 are offset by 1
   let days = Math.floor(serial);
   if (days > 59) days -= 1;
+  // Add 1 day to match Excel's display
+  days += 1;
   const result = new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000);
   return result;
 }
 function formatDateString(val) {
   if (typeof val === 'number') {
     const d = excelDateToJSDate(val);
-    // Format as YYYY-MM-DD
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
@@ -324,8 +324,7 @@ function formatDateString(val) {
   // Parse date string as DD/MM/YYYY or MM/DD/YYYY (Excel export)
   if (typeof val === 'string' && /^(\d{2})[\/\-](\d{2})[\/\-](\d{4})$/.test(val)) {
     const parts = val.split(/[\/\-]/);
-    // Try DD/MM/YYYY first (Excel default in many locales)
-    const d = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+    const d = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]) + 1); // Add 1 to day
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
