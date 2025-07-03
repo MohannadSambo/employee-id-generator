@@ -52,10 +52,6 @@ singleSection.innerHTML = `
       <input type="text" id="singleName" required>
     </div>
     <div style="margin-bottom:12px;">
-      <label>Old ID Number</label><br>
-      <input type="text" id="singleOldId">
-    </div>
-    <div style="margin-bottom:12px;">
       <label>Joining Date</label><br>
       <input type="date" id="singleDate" required>
     </div>
@@ -495,7 +491,6 @@ function updateSingleDeptDropdown() {
 document.getElementById('singleForm').onsubmit = function(e) {
   e.preventDefault();
   const name = document.getElementById('singleName').value.trim();
-  const oldId = document.getElementById('singleOldId').value.trim();
   const date = document.getElementById('singleDate').value;
   let dept = document.getElementById('singleDept').style.display !== 'none'
     ? document.getElementById('singleDept').value
@@ -517,7 +512,7 @@ document.getElementById('singleForm').onsubmit = function(e) {
   } else if (pattern === 'pattern2') {
     empId = `${year}${month}${day} - ${dept}`;
   } else if (pattern === 'pattern3') {
-    empId = `${dept}-${oldId}-${year}`;
+    empId = `${dept}-[Old ID number]-${year}`;
   } else if (pattern === 'pattern4') {
     empId = `${year}-${dept}-${initials}`;
   } else if (pattern === 'pattern5') {
