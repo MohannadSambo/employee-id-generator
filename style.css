@@ -78,6 +78,7 @@ button:hover {
 /* --- Table Styles --- */
 #tablePreview {
   margin-top: 24px;
+  overflow-x: auto;
 }
 #tablePreview table {
   width: 100%;
@@ -85,10 +86,12 @@ button:hover {
   background: #232429;
   border-radius: 12px;
   overflow: hidden;
+  min-width: 600px;
 }
 #tablePreview th, #tablePreview td {
   padding: 12px 10px;
   text-align: left;
+  word-break: break-word;
 }
 #tablePreview th {
   background: #232429;
@@ -102,4 +105,95 @@ button:hover {
 }
 #tablePreview tr:last-child td {
   border-bottom: none;
+}
+
+/* --- Dropdown (Select) Styles --- */
+label[for="patternSelect"] {
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 6px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+}
+#patternSelect {
+  background: #232429;
+  color: #fff;
+  border: 1px solid #393a3f;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-family: 'Montserrat', Arial, sans-serif;
+  font-weight: 500;
+  margin-bottom: 16px;
+  margin-right: 12px;
+  outline: none;
+  transition: border 0.2s;
+  box-shadow: none;
+}
+#patternSelect:focus {
+  border: 1.5px solid #ff2d42;
+}
+#patternSelect option {
+  background: #232429;
+  color: #fff;
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 900px) {
+  #app {
+    padding: 24px 10px;
+    max-width: 98vw;
+  }
+  h1, h2 {
+    font-size: 1.5rem;
+  }
+  button, input[type="file"] {
+    font-size: 0.95rem;
+    padding: 8px 16px;
+  }
+  #tablePreview table {
+    min-width: 400px;
+  }
+  #patternSelect {
+    font-size: 0.95rem;
+    padding: 8px 12px;
+  }
+  label[for="patternSelect"] {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 600px) {
+  #app {
+    padding: 12px 2vw;
+    margin: 10px auto;
+    border-radius: 8px;
+  }
+  h1, h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.7rem;
+  }
+  button, input[type="file"] {
+    font-size: 0.9rem;
+    padding: 7px 10px;
+    margin-bottom: 10px;
+  }
+  #tablePreview table {
+    min-width: 320px;
+    font-size: 0.9rem;
+  }
+  #tablePreview th, #tablePreview td {
+    padding: 7px 4px;
+  }
+  #patternSelect {
+    font-size: 0.9rem;
+    padding: 7px 8px;
+    margin-bottom: 10px;
+  }
+  label[for="patternSelect"] {
+    font-size: 0.9rem;
+    margin-top: 12px;
+    margin-bottom: 4px;
+  }
 } 
