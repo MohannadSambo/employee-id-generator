@@ -21,12 +21,36 @@ This app allows HR or admin users to:
 4. **Generate Employee IDs**
    - Click the "Generate ID" button. The app will add a new column with IDs in the format: `[Department] - [joining date year] - [joining date month] [joining date day]`.
 5. **Export Updated File**
-   - (Feature to be implemented) Download the updated Excel file with the new Employee ID column.
+   - Download the updated Excel file with the new Employee ID column.
 
 ## Notes
 - The app enforces the required columns and ignores any extra columns in uploaded files.
 - Dates are automatically formatted for clarity.
 - The UI is fully responsive and uses a modern dark theme.
+
+---
+
+## Working with Git, GitHub, and Deployment
+
+### How to Save and Deploy Your Changes
+- You can make as many changes as you want on your computer.
+- **Your app online (Vercel/Netlify) only updates when you push to GitHub.**
+- You do **not** have to push after every small change. Push when you reach a meaningful milestone (finish a feature, fix a bug, or want to save your progress).
+
+#### Typical Workflow
+1. Make changes locally and test your app.
+2. When ready, run:
+   ```sh
+   git add .
+   git commit -m "Describe your changes"
+   git push
+   ```
+3. Your remote app will update automatically.
+
+### Best Practices
+- Push whenever you want your changes to be saved to GitHub and deployed to your live app.
+- You can push as often as you like, but it's not required after every change.
+- If you work from another computer, just clone your repo, make changes, and push again.
 
 ---
 
